@@ -74,10 +74,10 @@ public class TCPServer : MonoBehaviour
 
                 if (axis == "y")
                     rotateScript.yAngle = angle;
-                else if (axis == "x")
-                    rotateScript.xAngle = angle;
-                else if (axis == "z")
-                    rotateScript.zAngle = angle;
+                // else if (axis == "x")
+                //     rotateScript.xAngle = angle;
+                // else if (axis == "z")
+                //     rotateScript.zAngle = angle;
 
                 rotateScript.speed = speed;
             }
