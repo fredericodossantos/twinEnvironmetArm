@@ -8,7 +8,7 @@ using UnityEngine;
 public class TCPServer : MonoBehaviour
 {
     private TcpListener listener;
-    private Dictionary<string, RotateScript> rotations;
+    private Dictionary<string, RotateYAxis> rotations;
 
     void Start()
     {
@@ -16,7 +16,7 @@ public class TCPServer : MonoBehaviour
         listener.Start();
         Debug.Log("Server started and listening for incoming connections on port 50000.");
 
-        rotations = new Dictionary<string, RotateScript>();
+        rotations = new Dictionary<string, RotateYAxis>();
 
         StartCoroutine(AcceptClients());
     }
@@ -57,36 +57,33 @@ public class TCPServer : MonoBehaviour
 
             string data = Encoding.ASCII.GetString(buffer, 0, bytesRead);
 
-            string[] parts = data.Split(' ');
-
-            if (parts.Length == 5 && parts[0] == "Arm_2" && parts[1] == "rotate")
+            if (data.StartsWith("rotate"))
             {
-                string axis = parts[2];
-                float angle = float.Parse(parts[3]);
-                float speed = float.Parse(parts[4]);
-
-                RotateYAxis rotateScript = GameObject.Find(parts[0]).GetComponent<RotateYAxis>();
-                if (rotateScript == null)
+                string[] parts = data.Split(' ');
+                if (parts.Length == 4)
                 {
-                    Debug.LogWarning("No RotateYAxis script found on game object: " + parts[0]);
-                    continue;
+                    string gameObjectName = parts[1];
+                    float angle = float.Parse(parts[2]);
+                    float speed = float.Parse(parts[3]);
+
+                    RotateYAxis rotateScript;
+                    if (!rotations.TryGetValue(gameObjectName, out rotateScript))
+                    {
+                        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                        cube.name = gameObjectName;
+
+                        rotateScript = cube.AddComponent<RotateYAxis>();
+                        rotations.Add(gameObjectName, rotateScript);
+                    }
+
+                    rotateScript.angle = angle;
+                    rotateScript.speed = speed;
                 }
-
-                if (axis == "y")
-                    rotateScript.yAngle = angle;
-                // else if (axis == "x")
-                //     rotateScript.xAngle = angle;
-                // else if (axis == "z")
-                //     rotateScript.zAngle = angle;
-
-                rotateScript.speed = speed;
-            }
-            else
-            {
-                Debug.LogWarning("Invalid command format: " + data);
+                else
+                {
+                    Debug.LogWarning("Invalid rotation command format: " + data);
+                }
             }
         }
     }
-
-
 }
