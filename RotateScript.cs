@@ -26,5 +26,6 @@ public class RotateScript : MonoBehaviour
         {
             transform.Rotate(new Vector3(xAngle, yAngle, zAngle) * speed * Time.deltaTime);
         }
+        else Debug.Log("Distance is " + Vector3.Distance(currentRotation, targetRotation));
     }
 }
