@@ -57,38 +57,36 @@ public class TCPServer : MonoBehaviour
 
             string data = Encoding.ASCII.GetString(buffer, 0, bytesRead);
 
-            if (data.StartsWith("rotate"))
+            string[] parts = data.Split(' ');
+
+            if (parts.Length == 5 && parts[0] == "Arm_2" && parts[1] == "rotate")
             {
-                string[] parts = data.Split(' ');
-                if (parts.Length == 3)
+                string axis = parts[2];
+                float angle = float.Parse(parts[3]);
+                float speed = float.Parse(parts[4]);
+
+                RotateYAxis rotateScript = GameObject.Find(parts[0]).GetComponent<RotateYAxis>();
+                if (rotateScript == null)
                 {
-                    string axis = parts[1];
-                    float speed = float.Parse(parts[2]);
-
-                    RotateScript rotateScript;
-                    if (!rotations.TryGetValue(axis, out rotateScript))
-                    {
-                        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                        cube.name = axis + "Cube";
-
-                        rotateScript = cube.AddComponent<RotateScript>();
-                        if (axis == "x")
-                            rotateScript.xAngle = 1f;
-                        else if (axis == "y")
-                            rotateScript.yAngle = 1f;
-                        else if (axis == "z")
-                            rotateScript.zAngle = 1f;
-
-                        rotations.Add(axis, rotateScript);
-                    }
-
-                    rotateScript.speed = speed;
+                    Debug.LogWarning("No RotateYAxis script found on game object: " + parts[0]);
+                    continue;
                 }
-                else
-                {
-                    Debug.LogWarning("Invalid rotation command format: " + data);
-                }
+
+                if (axis == "y")
+                    rotateScript.yAngle = angle;
+                else if (axis == "x")
+                    rotateScript.xAngle = angle;
+                else if (axis == "z")
+                    rotateScript.zAngle = angle;
+
+                rotateScript.speed = speed;
+            }
+            else
+            {
+                Debug.LogWarning("Invalid command format: " + data);
             }
         }
     }
+
+
 }
