@@ -9,8 +9,22 @@ public class RotateScript : MonoBehaviour
     public float yAngle = 0f;
     public float zAngle = 0f;
 
+    private Vector3 currentRotation;
+    private Vector3 targetRotation;
+
+    private void Start()
+    {
+        currentRotation = transform.rotation.eulerAngles;
+        targetRotation = currentRotation + new Vector3(xAngle, yAngle, zAngle);
+    }
+
     private void Update()
     {
-        transform.Rotate(new Vector3(xAngle, yAngle, zAngle)* speed * Time.deltaTime);
+        currentRotation = transform.rotation.eulerAngles;
+
+        if (Vector3.Distance(currentRotation, targetRotation) > 0.01f)
+        {
+            transform.Rotate(new Vector3(xAngle, yAngle, zAngle) * speed * Time.deltaTime);
+        }
     }
 }
