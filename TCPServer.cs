@@ -1,40 +1,32 @@
-using System.Collections.Generic;
-using UnityEngine;
 using System.Collections;
-using System.Net.Sockets;
+using System.Collections.Generic;
 using System.Net;
+using System.Net.Sockets;
 using System.Text;
-
+using UnityEngine;
 
 public class TCPServer : MonoBehaviour
 {
-    private TcpListener server = null;
-    private TcpClient client = null;
+    private TcpListener listener;
+    private Dictionary<string, RotateScript> rotations;
 
     void Start()
     {
-        // Create the server and start listening for incoming connections
-        IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
-        server = new TcpListener(ipAddress, 50000);
-        server.Start();
+        listener = new TcpListener(IPAddress.Any, 50000);
+        listener.Start();
         Debug.Log("Server started and listening for incoming connections on port 50000.");
 
-        // Start accepting clients in a separate thread
+        rotations = new Dictionary<string, RotateScript>();
+
         StartCoroutine(AcceptClients());
     }
 
     void OnDestroy()
     {
-        // Close the server and disconnect any connected clients
-        if (server != null)
+        if (listener != null)
         {
-            server.Stop();
+            listener.Stop();
             Debug.Log("Server stopped.");
-        }
-        if (client != null)
-        {
-            client.Close();
-            Debug.Log("Client disconnected.");
         }
     }
 
@@ -42,73 +34,55 @@ public class TCPServer : MonoBehaviour
     {
         while (true)
         {
-            // Wait for a client to connect
-            yield return new WaitUntil(() => server.Pending());
+            yield return new WaitUntil(() => listener.Pending());
 
-            // Accept the client and start reading from it in a separate thread
-            client = server.AcceptTcpClient();
-            Debug.Log("Client connected.");
+            TcpClient client = listener.AcceptTcpClient();
+            Debug.Log("Client connected from " + ((IPEndPoint)client.Client.RemoteEndPoint).Address.ToString());
 
-            StartCoroutine(ReceiveCommands());
+            StartCoroutine(ReceiveCommands(client));
         }
     }
 
-    private IEnumerator ReceiveCommands()
+    private IEnumerator ReceiveCommands(TcpClient client)
     {
-        // Create a buffer for incoming data
-        byte[] buffer = new byte[1024];
-
-        // Get the stream to read from the client
         NetworkStream stream = client.GetStream();
+
+        byte[] buffer = new byte[1024];
 
         while (true)
         {
-            // Wait for data to be available
             yield return new WaitUntil(() => stream.DataAvailable);
 
-            // Read the data into the buffer
             int bytesRead = stream.Read(buffer, 0, buffer.Length);
 
-            // Convert the data to a string
             string data = Encoding.ASCII.GetString(buffer, 0, bytesRead);
 
-            // Parse the data as a rotation command
             if (data.StartsWith("rotate"))
             {
                 string[] parts = data.Split(' ');
-                if (parts.Length == 6)
+                if (parts.Length == 3)
                 {
-                    string gameObjectName = parts[1];
-                    float xAngle = float.Parse(parts[2]);
-                    float yAngle = float.Parse(parts[3]);
-                    float zAngle = float.Parse(parts[4]);
-                    float speed = float.Parse(parts[5]);
+                    string axis = parts[1];
+                    float speed = float.Parse(parts[2]);
 
-                    // Find the game object
-                    GameObject gameObject = GameObject.Find(gameObjectName);
-                    if (gameObject != null)
+                    RotateScript rotateScript;
+                    if (!rotations.TryGetValue(axis, out rotateScript))
                     {
-                        // Get the script component attached to the game object
-                        RotateScript rotateScript = gameObject.GetComponent<RotateScript>();
-                        if (rotateScript != null)
-                        {
-                            // Set the public variables of the script component
-                            rotateScript.xAngle = xAngle;
-                            rotateScript.yAngle = yAngle;
-                            rotateScript.zAngle = zAngle;
-                            rotateScript.speed = speed;
+                        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                        cube.name = axis + "Cube";
 
-                            Debug.Log("Set rotation of game object " + gameObjectName + " to (" + xAngle + ", " + yAngle + ", " + zAngle + ") at speed " + speed + ".");
-                        }
-                        else
-                        {
-                            Debug.LogWarning("Game object " + gameObjectName + " does not have a RotateScript component attached.");
-                        }
+                        rotateScript = cube.AddComponent<RotateScript>();
+                        if (axis == "x")
+                            rotateScript.xAngle = 1f;
+                        else if (axis == "y")
+                            rotateScript.yAngle = 1f;
+                        else if (axis == "z")
+                            rotateScript.zAngle = 1f;
+
+                        rotations.Add(axis, rotateScript);
                     }
-                    else
-                    {
-                        Debug.LogWarning("Game object " + gameObjectName + " not found.");
-                    }
+
+                    rotateScript.speed = speed;
                 }
                 else
                 {
