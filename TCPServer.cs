@@ -6,8 +6,6 @@ using System.Net;
 using System.Text;
 
 
-
-
 public class TCPServer : MonoBehaviour
 {
     private TcpListener server = null;
@@ -78,16 +76,43 @@ public class TCPServer : MonoBehaviour
             if (data.StartsWith("rotate"))
             {
                 string[] parts = data.Split(' ');
-                if (parts.Length == 4)
+                if (parts.Length == 6)
                 {
                     string gameObjectName = parts[1];
                     float xAngle = float.Parse(parts[2]);
                     float yAngle = float.Parse(parts[3]);
+                    float zAngle = float.Parse(parts[4]);
+                    float speed = float.Parse(parts[5]);
 
-                    // Rotate the game object
+                    // Find the game object
                     GameObject gameObject = GameObject.Find(gameObjectName);
-                    gameObject.transform.Rotate(new Vector3(xAngle, yAngle, 0));
-                    Debug.Log("Rotated game object " + gameObjectName + " by " + xAngle + " degrees on the x-axis and " + yAngle + " degrees on the y-axis.");
+                    if (gameObject != null)
+                    {
+                        // Get the script component attached to the game object
+                        RotateScript rotateScript = gameObject.GetComponent<RotateScript>();
+                        if (rotateScript != null)
+                        {
+                            // Set the public variables of the script component
+                            rotateScript.xAngle = xAngle;
+                            rotateScript.yAngle = yAngle;
+                            rotateScript.zAngle = zAngle;
+                            rotateScript.speed = speed;
+
+                            Debug.Log("Set rotation of game object " + gameObjectName + " to (" + xAngle + ", " + yAngle + ", " + zAngle + ") at speed " + speed + ".");
+                        }
+                        else
+                        {
+                            Debug.LogWarning("Game object " + gameObjectName + " does not have a RotateScript component attached.");
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Game object " + gameObjectName + " not found.");
+                    }
+                }
+                else
+                {
+                    Debug.LogWarning("Invalid rotation command format: " + data);
                 }
             }
         }
