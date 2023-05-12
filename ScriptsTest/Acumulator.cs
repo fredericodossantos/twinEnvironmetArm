@@ -18,12 +18,13 @@ public class Acumulator : MonoBehaviour
 
     void Update()
     {
-        // Update the positions of the game objects based on the values in the list
         for (int i = 0; i < gameObjects.Length; i++)
         {
-            gameObjects[i].transform.position = positions[i];
+            Vector3 direction = positions[i] - gameObjects[i].transform.position;
+            gameObjects[i].transform.Translate(direction * Time.deltaTime);
         }
     }
+
 }
 
 
