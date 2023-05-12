@@ -9,9 +9,16 @@ public class Move : MonoBehaviour
     public void MoveIt()
     {
         Debug.Log("Clicked to move");
-        acumulator.positions[1] = new Vector3(acumulator.positions[1].x + Random.Range(-3f, 3f), acumulator.positions[1].y, acumulator.positions[1].z);
+        if (!acumulator.isMoving[1])
+        {
+            acumulator.positions[1] = new Vector3(acumulator.positions[1].x + Random.Range(-3f, 3f), acumulator.positions[1].y, acumulator.positions[1].z);
+            acumulator.moveSpeed = Random.Range(0.5f, 2f);
+        }
+        else
+        {
+            Debug.Log("Object still moving");
+        }
     }
-
 
     
 }
