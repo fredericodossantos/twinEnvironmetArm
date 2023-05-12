@@ -33,9 +33,12 @@ public class Angular_Acumulator : MonoBehaviour
             else
             {
                 isRotating[i] = false;
+                // Snap the rotation of the game object to its target rotation
+                gameObjects[i].transform.eulerAngles = new Vector3(targetRotations[i], gameObjects[i].transform.eulerAngles.y, gameObjects[i].transform.eulerAngles.z);
             }
         }
     }
+
 }
 // You can add multiple game objects to the gameObjects list in the Angular_Acumulator class and attach the Rotate script to each one. When you call the RotateIt method of a Rotate script, it will modify the target rotation of the game object that has the script attached to it.
 
