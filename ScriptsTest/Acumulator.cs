@@ -17,7 +17,7 @@ public class Acumulator : MonoBehaviour
             positions.Add(gameObjects[i].transform.position);
             isMoving.Add(false);
         }
-    }
+    } 
     void Update()
     {
         for (int i = 0; i < gameObjects.Length; i++)
