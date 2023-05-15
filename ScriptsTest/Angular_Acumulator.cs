@@ -7,7 +7,7 @@ public class Angular_Acumulator : MonoBehaviour
     public GameObject[] gameObjects;
     public List<float> targetRotations = new List<float>();
     public List<bool> isRotating = new List<bool>();
-    public List<float> previousAngles = new List<float>();
+    public List<int> previousSigns = new List<int>();
     public float rotateSpeed = 45f;
 
     void Start()
@@ -17,7 +17,7 @@ public class Angular_Acumulator : MonoBehaviour
         {
             targetRotations.Add(gameObjects[i].transform.eulerAngles.x);
             isRotating.Add(false);
-            previousAngles.Add(0f);
+            previousSigns.Add(0);
         }
     }
 
@@ -41,21 +41,16 @@ public class Angular_Acumulator : MonoBehaviour
             }
 
             // Check if the game object is oscillating
-            if (Mathf.Abs(angle - previousAngles[i]) > 1f && angle < 5f)
+            int sign = (int)Mathf.Sign(angle);
+            if (sign != previousSigns[i] && previousSigns[i] != 0)
             {
-                // Snap the rotation of the game object to its target rotation
-                gameObjects[i].transform.rotation = targetRotation;
-                isRotating[i] = false;
+                Debug.Log("Game object " + i + " is oscillating");
             }
 
-            // Store the current angle for the next frame
-            previousAngles[i] = angle;
+            // Store the current sign for the next frame
+            previousSigns[i] = sign;
         }
     }
-
-
-
-
 }
 
 
