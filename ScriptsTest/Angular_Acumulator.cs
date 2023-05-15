@@ -7,6 +7,7 @@ public class Angular_Acumulator : MonoBehaviour
     public GameObject[] gameObjects;
     public List<float> targetRotations = new List<float>();
     public List<bool> isRotating = new List<bool>();
+    public List<float> previousAngles = new List<float>();
     public float rotateSpeed = 45f;
 
     void Start()
@@ -16,8 +17,10 @@ public class Angular_Acumulator : MonoBehaviour
         {
             targetRotations.Add(gameObjects[i].transform.eulerAngles.x);
             isRotating.Add(false);
+            previousAngles.Add(0f);
         }
     }
+
     void Update()
     {
         for (int i = 0; i < gameObjects.Length; i++)
@@ -36,12 +39,21 @@ public class Angular_Acumulator : MonoBehaviour
                 gameObjects[i].transform.rotation = targetRotation;
                 isRotating[i] = false;
             }
+
+            // Check if the game object is oscillating
+            if (Mathf.Abs(angle - previousAngles[i]) > 1f)
+            {
+                Debug.Log("Game object " + i + " is oscillating");
+            }
+
+            // Store the current angle for the next frame
+            previousAngles[i] = angle;
         }
     }
-
-
-
 }
+
+
+
 // You can add multiple game objects to the gameObjects list in the Angular_Acumulator class and attach the Rotate script to each one. When you call the RotateIt method of a Rotate script, it will modify the target rotation of the game object that has the script attached to it.
 
 // To add game objects to the gameObjects list, you can do the following:
