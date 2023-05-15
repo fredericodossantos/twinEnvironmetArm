@@ -27,16 +27,18 @@ public class Angular_Acumulator : MonoBehaviour
             float speed = Mathf.Lerp(0f, rotateSpeed, angle / 90f);
             gameObjects[i].transform.rotation = Quaternion.RotateTowards(gameObjects[i].transform.rotation, targetRotation, speed * Time.deltaTime);
 
-            if (speed > 0.01f)
+            if (angle > 0.01f)
             {
                 isRotating[i] = true;
             }
             else
             {
+                gameObjects[i].transform.rotation = targetRotation;
                 isRotating[i] = false;
             }
         }
     }
+
 
 
 }

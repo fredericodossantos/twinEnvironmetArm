@@ -29,7 +29,7 @@ public class Rotate : MonoBehaviour
             {
                 // Change the target rotation and speed of the game object
                 angular_acumulator.targetRotations[index] += Random.Range(-90f, 90f);
-                angular_acumulator.rotateSpeed = Random.Range(5f, 45f);
+                angular_acumulator.rotateSpeed = 90f;//Random.Range(30f, 60f);
             }
             else
             {
