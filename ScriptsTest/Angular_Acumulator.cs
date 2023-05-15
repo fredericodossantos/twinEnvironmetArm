@@ -18,15 +18,16 @@ public class Angular_Acumulator : MonoBehaviour
             isRotating.Add(false);
         }
     }
-
     void Update()
     {
         for (int i = 0; i < gameObjects.Length; i++)
         {
             Quaternion targetRotation = Quaternion.Euler(targetRotations[i], gameObjects[i].transform.eulerAngles.y, gameObjects[i].transform.eulerAngles.z);
-            gameObjects[i].transform.rotation = Quaternion.RotateTowards(gameObjects[i].transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
+            float angle = Quaternion.Angle(gameObjects[i].transform.rotation, targetRotation);
+            float speed = Mathf.Lerp(0f, rotateSpeed, angle / 90f);
+            gameObjects[i].transform.rotation = Quaternion.RotateTowards(gameObjects[i].transform.rotation, targetRotation, speed * Time.deltaTime);
 
-            if (Quaternion.Angle(gameObjects[i].transform.rotation, targetRotation) > 0.01f)
+            if (speed > 0.01f)
             {
                 isRotating[i] = true;
             }
@@ -36,8 +37,6 @@ public class Angular_Acumulator : MonoBehaviour
             }
         }
     }
-
-
 
 
 }
