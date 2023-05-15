@@ -49,6 +49,8 @@ public class Angular_Acumulator : MonoBehaviour
 
             // Store the current sign for the next frame
             previousSigns[i] = sign;
+            Debug.Log("sign: "+sign);
+
         }
     }
 }
