@@ -5,9 +5,8 @@ using UnityEngine;
 public class Angular_Acumulator : MonoBehaviour
 {
     public GameObject[] gameObjects;
-    public List<float> targetRotations = new List<float>();
+    public List<Quaternion> targetRotations = new List<Quaternion>();
     public List<bool> isRotating = new List<bool>();
-    public List<int> previousSigns = new List<int>();
     public float rotateSpeed = 45f;
 
     void Start()
@@ -15,9 +14,8 @@ public class Angular_Acumulator : MonoBehaviour
         // Add the initial rotations and movement states of the game objects to the lists
         for (int i = 0; i < gameObjects.Length; i++)
         {
-            targetRotations.Add(gameObjects[i].transform.eulerAngles.x);
+            targetRotations.Add(gameObjects[i].transform.rotation);
             isRotating.Add(false);
-            previousSigns.Add(0);
         }
     }
 
@@ -25,7 +23,7 @@ public class Angular_Acumulator : MonoBehaviour
     {
         for (int i = 0; i < gameObjects.Length; i++)
         {
-            Quaternion targetRotation = Quaternion.Euler(targetRotations[i], gameObjects[i].transform.eulerAngles.y, gameObjects[i].transform.eulerAngles.z);
+            Quaternion targetRotation = targetRotations[i];
             float angle = Quaternion.Angle(gameObjects[i].transform.rotation, targetRotation);
             float speed = Mathf.Lerp(0f, rotateSpeed, angle / 90f);
             gameObjects[i].transform.rotation = Quaternion.RotateTowards(gameObjects[i].transform.rotation, targetRotation, speed * Time.deltaTime);
@@ -39,23 +37,9 @@ public class Angular_Acumulator : MonoBehaviour
                 gameObjects[i].transform.rotation = targetRotation;
                 isRotating[i] = false;
             }
-
-            // Check if the game object is oscillating
-            int sign = (int)Mathf.Sign(angle);
-            if (sign != previousSigns[i] && previousSigns[i] != 0)
-            {
-                Debug.Log("Game object " + i + " is oscillating");
-            }
-
-            // Store the current sign for the next frame
-            previousSigns[i] = sign;
-            Debug.Log("sign: "+sign);
-
         }
     }
 }
-
-
 
 // You can add multiple game objects to the gameObjects list in the Angular_Acumulator class and attach the Rotate script to each one. When you call the RotateIt method of a Rotate script, it will modify the target rotation of the game object that has the script attached to it.
 
