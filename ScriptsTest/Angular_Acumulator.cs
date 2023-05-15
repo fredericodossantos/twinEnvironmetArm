@@ -41,15 +41,21 @@ public class Angular_Acumulator : MonoBehaviour
             }
 
             // Check if the game object is oscillating
-            if (Mathf.Abs(angle - previousAngles[i]) > 1f)
+            if (Mathf.Abs(angle - previousAngles[i]) > 1f && angle < 5f)
             {
-                Debug.Log("Game object " + i + " is oscillating");
+                // Snap the rotation of the game object to its target rotation
+                gameObjects[i].transform.rotation = targetRotation;
+                isRotating[i] = false;
             }
 
             // Store the current angle for the next frame
             previousAngles[i] = angle;
         }
     }
+
+
+
+
 }
 
 
