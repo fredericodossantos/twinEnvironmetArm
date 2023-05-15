@@ -28,8 +28,9 @@ public class Rotate : MonoBehaviour
             if (!angular_acumulator.isRotating[index])
             {
                 // Change the target rotation and speed of the game object
-                angular_acumulator.targetRotations[index] += Random.Range(-90f, 90f);
-                angular_acumulator.rotateSpeed = 90f;//Random.Range(30f, 60f);
+                Quaternion deltaRotation = Quaternion.Euler(Random.Range(-90f, 90f), 0f, 0f);
+                angular_acumulator.targetRotations[index] *= deltaRotation;
+                angular_acumulator.rotateSpeed = Random.Range(5f, 45f);
             }
             else
             {
@@ -37,7 +38,12 @@ public class Rotate : MonoBehaviour
             }
         }
     }
+
 }
+
+
+
+
 // You can add multiple game objects to the gameObjects list in the Angular_Acumulator class and attach the Rotate script to each one. When you call the RotateIt method of a Rotate script, it will modify the target rotation of the game object that has the script attached to it.
 
 // To add game objects to the gameObjects list, you can do the following:

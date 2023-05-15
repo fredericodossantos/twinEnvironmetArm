@@ -26,7 +26,7 @@ public class Angular_Acumulator : MonoBehaviour
             Quaternion targetRotation = targetRotations[i];
             float angle = Quaternion.Angle(gameObjects[i].transform.rotation, targetRotation);
             float speed = Mathf.Lerp(0f, rotateSpeed, angle / 90f);
-            gameObjects[i].transform.rotation = Quaternion.RotateTowards(gameObjects[i].transform.rotation, targetRotation, speed * Time.deltaTime);
+            gameObjects[i].transform.rotation = Quaternion.RotateTowards(gameObjects[i].transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
 
             if (angle > 0.01f)
             {
