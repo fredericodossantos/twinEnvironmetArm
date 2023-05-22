@@ -13,32 +13,31 @@ public class ToolMove : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+void Update()
+{
+    // Check if there are at least three objects in the gameObjects array
+    if (linear_acumulator.gameObjects.Length >= 3)
     {
-        //Debug.Log("Tool update");
-        // transform.Translate(0.01f,0,0);
+        // Get the X, Y, and Z positions from the desired game objects
+        float targetX = linear_acumulator.gameObjects[0].transform.position.x;
+        float targetY = linear_acumulator.gameObjects[1].transform.position.y;
+        float targetZ = linear_acumulator.gameObjects[2].transform.position.z;
 
-        // Check if there are at least three objects in the positions list
-        if (linear_acumulator.positions.Count >= 3)
-        {
-            // Get the X, Y, and Z positions from the linear_acumulator positions list
-            float targetX = linear_acumulator.positions[0].x;
-            float targetY = linear_acumulator.positions[1].y;
-            float targetZ = linear_acumulator.positions[2].z;
+        // Set the target position of the game object
+        Vector3 targetPosition = new Vector3(targetX, targetY, targetZ);
 
-            // Set the target position of the game object
-            Vector3 targetPosition = new Vector3(targetX, targetY, targetZ);
-            Debug.Log("targetX: " + targetX + ", targetY: " + targetY + ", targetZ: " + targetZ);
+        // Output the target position for debugging
+        Debug.Log("Target Position: " + targetPosition);
 
-            transform.position = targetPosition; // Use gameObject.transform to reference the game object's transform
+        transform.position = targetPosition; // Use gameObject.transform to reference the game object's transform
 
-            // Set the move speed of the game object
-            linear_acumulator.moveSpeed = 2f;
-        }
-        else
-        {
-            Debug.LogError("Not enough objects in the positions list");
-        }
-        
+        // Set the move speed of the game object
+        linear_acumulator.moveSpeed = 2f;
     }
+    else
+    {
+        Debug.LogError("Not enough game objects in the gameObjects array");
+    }
+}
+
 }
