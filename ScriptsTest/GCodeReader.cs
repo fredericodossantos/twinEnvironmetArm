@@ -1,0 +1,69 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+using System.IO;
+
+public class GCodeReader : MonoBehaviour
+{
+    public Linear_Acumulator linear_acumulator;
+    public string gcodeFilePath; // Path to the G-code file
+
+    // Attach this method to the button's OnClick event in the Inspector
+    public void ReadAndParseGCode()
+    {
+        if (string.IsNullOrEmpty(gcodeFilePath))
+        {
+            Debug.LogError("G-code file path is not set.");
+            return;
+        }
+
+        // Read the G-code file
+        try
+        {
+            using (StreamReader sr = new StreamReader(gcodeFilePath))
+            {
+                string line;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    // Parse the G-code commands here
+                    // Extract movement commands for each axis and update the target positions in the Linear_Acumulator script
+                    // For example:
+                    if (line.StartsWith("G1 X"))
+                    {
+                        float targetX = ExtractFloatValue(line, "X");
+                        linear_acumulator.positions[0].x = targetX;
+                    }
+                    else if (line.StartsWith("G1 Y"))
+                    {
+                        float targetY = ExtractFloatValue(line, "Y");
+                        linear_acumulator.positions[1].y = targetY;
+                    }
+                    else if (line.StartsWith("G1 Z"))
+                    {
+                        float targetZ = ExtractFloatValue(line, "Z");
+                        linear_acumulator.positions[2].z = targetZ;
+                    }
+                }
+            }
+        }
+        catch (FileNotFoundException)
+        {
+            Debug.LogError("G-code file not found: " + gcodeFilePath);
+        }
+        catch (IOException e)
+        {
+            Debug.LogError("Error reading G-code file: " + e.Message);
+        }
+    }
+
+    // Helper method to extract float values from G-code commands
+    private float ExtractFloatValue(string line, string parameter)
+    {
+        int parameterIndex = line.IndexOf(parameter);
+        int startIndex = parameterIndex + parameter.Length;
+        int endIndex = line.IndexOf(' ', startIndex);
+        string valueString = line.Substring(startIndex, endIndex - startIndex);
+        return float.Parse(valueString);
+    }
+}
