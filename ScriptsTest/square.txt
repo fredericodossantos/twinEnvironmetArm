@@ -1,0 +1,5 @@
+G1 X0 Y0      ; Move to the starting position (0, 0)
+G1 X4         ; Move horizontally to the right (X-axis) by 4 units
+G1 Y4         ; Move vertically upwards (Y-axis) by 4 units
+G1 X0         ; Move horizontally to the left (X-axis) by 4 units
+G1 Y0         ; Move vertically downwards (Y-axis) to the starting position

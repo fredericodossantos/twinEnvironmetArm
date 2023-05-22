@@ -21,6 +21,7 @@ public class GCodeReader : MonoBehaviour
         // Read the G-code file
         try
         {
+            Debug.LogError("trying to read the file");
             using (StreamReader sr = new StreamReader(gcodeFilePath))
             {
                 string line;

@@ -23,7 +23,7 @@ public class ToolMove : MonoBehaviour
             Vector3 targetPosition = new Vector3(targetX, targetY, targetZ);
 
             // Output the target position for debugging
-            Debug.Log("Target Position: " + targetPosition);
+            //Debug.Log("Target Position: " + targetPosition);
 
             transform.position = targetPosition; // Use gameObject.transform to reference the game object's transform
 
