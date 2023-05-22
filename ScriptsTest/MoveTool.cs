@@ -6,7 +6,7 @@ public class MoveTool : MonoBehaviour
 {
     public Linear_Acumulator linear_acumulator; // Drag and drop the game object with the Acumulator script attached to this field in the Inspector
 
-    public void MoveIt()
+    public void Update()
     {
         // Debug.Log("Clicked to move");
 
