@@ -18,11 +18,11 @@ public class MoveTool : MonoBehaviour
             float targetY = linear_acumulator.positions[1].y;
             float targetZ = linear_acumulator.positions[2].z;
 
-            // Set the target position of the object
+            // Set the target position of the game object
             Vector3 targetPosition = new Vector3(targetX, targetY, targetZ);
-            transform.position = targetPosition;
+            gameObject.transform.position = targetPosition; // Use gameObject.transform to reference the game object's transform
 
-            // Set the move speed of the object
+            // Set the move speed of the game object
             linear_acumulator.moveSpeed = Random.Range(0.5f, 2f);
         }
         else
@@ -30,4 +30,5 @@ public class MoveTool : MonoBehaviour
             Debug.LogError("Not enough objects in the positions list");
         }
     }
+
 }
