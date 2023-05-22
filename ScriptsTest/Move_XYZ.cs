@@ -16,7 +16,7 @@ public class Move_XYZ : MonoBehaviour
 
     public void MoveIt()
     {
-        Debug.Log("Clicked to move");
+        // Debug.Log("Clicked to move");
 
         // Find the index of this game object in the gameObjects list
         int index = -1;
