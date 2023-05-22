@@ -2,13 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveTool : MonoBehaviour
+public class ToolMove : MonoBehaviour
 {
     public Linear_Acumulator linear_acumulator; // Drag and drop the game object with the Acumulator script attached to this field in the Inspector
 
-    public void Update()
+    // Start is called before the first frame update
+    void Start()
     {
-        Debug.Log("Tool update");
+        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        //Debug.Log("Tool update");
+        // transform.Translate(0.01f,0,0);
 
         // Check if there are at least three objects in the positions list
         if (linear_acumulator.positions.Count >= 3)
@@ -20,7 +28,9 @@ public class MoveTool : MonoBehaviour
 
             // Set the target position of the game object
             Vector3 targetPosition = new Vector3(targetX, targetY, targetZ);
-            gameObject.transform.position = targetPosition; // Use gameObject.transform to reference the game object's transform
+            Debug.Log("targetX: " + targetX + ", targetY: " + targetY + ", targetZ: " + targetZ);
+
+            transform.position = targetPosition; // Use gameObject.transform to reference the game object's transform
 
             // Set the move speed of the game object
             linear_acumulator.moveSpeed = 2f;
@@ -29,6 +39,6 @@ public class MoveTool : MonoBehaviour
         {
             Debug.LogError("Not enough objects in the positions list");
         }
+        
     }
-
 }
