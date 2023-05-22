@@ -32,17 +32,23 @@ public class GCodeReader : MonoBehaviour
                     if (line.StartsWith("G1 X"))
                     {
                         float targetX = ExtractFloatValue(line, "X");
-                        linear_acumulator.positions[0].x = targetX;
+                        Vector3 newPosition = linear_acumulator.positions[0];
+                        newPosition.x = targetX;
+                        linear_acumulator.positions[0] = newPosition;
                     }
                     else if (line.StartsWith("G1 Y"))
                     {
                         float targetY = ExtractFloatValue(line, "Y");
-                        linear_acumulator.positions[1].y = targetY;
+                        Vector3 newPosition = linear_acumulator.positions[1];
+                        newPosition.y = targetY;
+                        linear_acumulator.positions[1] = newPosition;
                     }
                     else if (line.StartsWith("G1 Z"))
                     {
                         float targetZ = ExtractFloatValue(line, "Z");
-                        linear_acumulator.positions[2].z = targetZ;
+                        Vector3 newPosition = linear_acumulator.positions[2];
+                        newPosition.z = targetZ;
+                        linear_acumulator.positions[2] = newPosition;
                     }
                 }
             }
