@@ -16,8 +16,8 @@ public class ToolMove : MonoBehaviour
         {
             // Get the X, Y, and Z positions from the assigned game objects
             float targetX = objectX.transform.position.x;
-            float targetY = objectY.transform.position.y;
-            float targetZ = objectZ.transform.position.z;
+            float targetY = objectZ.transform.position.y;
+            float targetZ = objectY.transform.position.z;
 
             // Set the target position of the game object
             Vector3 targetPosition = new Vector3(targetX, targetY, targetZ);
