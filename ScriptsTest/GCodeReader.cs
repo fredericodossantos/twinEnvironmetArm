@@ -21,7 +21,7 @@ public class GCodeReader : MonoBehaviour
         // Read the G-code file
         try
         {
-            Debug.LogError("trying to read the file");
+            Debug.Log("trying to read the file");
             using (StreamReader sr = new StreamReader(gcodeFilePath))
             {
                 string line;
@@ -36,6 +36,7 @@ public class GCodeReader : MonoBehaviour
                         Vector3 newPosition = linear_acumulator.positions[0];
                         newPosition.x = targetX;
                         linear_acumulator.positions[0] = newPosition;
+                        Debug.Log("changin in X axis");
                     }
                     else if (line.StartsWith("G1 Y"))
                     {
@@ -43,6 +44,7 @@ public class GCodeReader : MonoBehaviour
                         Vector3 newPosition = linear_acumulator.positions[1];
                         newPosition.y = targetY;
                         linear_acumulator.positions[1] = newPosition;
+                        Debug.Log("changin in Y axis");
                     }
                     else if (line.StartsWith("G1 Z"))
                     {
@@ -50,6 +52,7 @@ public class GCodeReader : MonoBehaviour
                         Vector3 newPosition = linear_acumulator.positions[2];
                         newPosition.z = targetZ;
                         linear_acumulator.positions[2] = newPosition;
+                        Debug.Log("changin in Z axis");
                     }
                 }
             }
