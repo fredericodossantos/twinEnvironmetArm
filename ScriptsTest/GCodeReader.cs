@@ -10,6 +10,8 @@ public class GCodeReader : MonoBehaviour
     public string gcodeFilePath; // Path to the G-code file
 
     // Attach this method to the button's OnClick event in the Inspector
+
+
     public void ReadAndParseGCode()
     {
         if (string.IsNullOrEmpty(gcodeFilePath))
@@ -33,18 +35,22 @@ public class GCodeReader : MonoBehaviour
                     if (line.StartsWith("G1 X"))
                     {
                         float targetX = ExtractFloatValue(line, "X");
-                        Vector3 newPosition = linear_acumulator.positions[0];
+                        Vector3 newPosition = linear_acumulator.positions[1];
                         newPosition.x = targetX;
-                        linear_acumulator.positions[0] = newPosition;
-                        Debug.Log("changin in X axis");
+                        linear_acumulator.positions[1] = newPosition;
+                        Debug.Log("changing in X axis");
+
+                        StartCoroutine(WaitForMovementCompletion(linear_acumulator, 1));
                     }
                     else if (line.StartsWith("G1 Y"))
                     {
                         float targetY = ExtractFloatValue(line, "Y");
-                        Vector3 newPosition = linear_acumulator.positions[1];
+                        Vector3 newPosition = linear_acumulator.positions[0];
                         newPosition.y = targetY;
-                        linear_acumulator.positions[1] = newPosition;
-                        Debug.Log("changin in Y axis");
+                        linear_acumulator.positions[0] = newPosition;
+                        Debug.Log("changing in Y axis");
+
+                        StartCoroutine(WaitForMovementCompletion(linear_acumulator, 0));
                     }
                     else if (line.StartsWith("G1 Z"))
                     {
@@ -52,7 +58,9 @@ public class GCodeReader : MonoBehaviour
                         Vector3 newPosition = linear_acumulator.positions[2];
                         newPosition.z = targetZ;
                         linear_acumulator.positions[2] = newPosition;
-                        Debug.Log("changin in Z axis");
+                        Debug.Log("changing in Z axis");
+
+                        StartCoroutine(WaitForMovementCompletion(linear_acumulator, 2));
                     }
                 }
             }
@@ -66,6 +74,20 @@ public class GCodeReader : MonoBehaviour
             Debug.LogError("Error reading G-code file: " + e.Message);
         }
     }
+
+    // Coroutine to wait for movement completion
+    private IEnumerator WaitForMovementCompletion(Linear_Acumulator accumulator, int axisIndex)
+    {
+        while (accumulator.isMoving[axisIndex])
+        {
+            yield return null;
+        }
+
+        // Movement completed, proceed to the next G-code command
+    }
+
+
+
 
     // Helper method to extract float values from G-code commands
     private float ExtractFloatValue(string line, string parameter)
