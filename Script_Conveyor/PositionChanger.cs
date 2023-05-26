@@ -1,22 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PositionChanger : MonoBehaviour
 {
     [SerializeField]
-    private Vector3 position;
+    [Range(-10f, 10f)]
+    private float xPosition;
 
-    public Vector3 PositionChanger
+    public Vector3 Position
     {
-        get { return position; }
-        set { position = value; }
-    
+        get { return new Vector3(xPosition, transform.position.y, transform.position.z); }
+        set { xPosition = value.x; }
     }
 
     private void Update()
     {
-        transform.position = position;
+        transform.position = Position;
     }
-
 }
