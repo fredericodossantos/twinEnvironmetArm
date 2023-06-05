@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ScaraRotate : MonoBehaviour
@@ -41,8 +39,14 @@ public class ScaraRotate : MonoBehaviour
                 angular_acumulator.targetRotations[index] *= deltaRotation;
                 angular_acumulator.rotateSpeed = Random.Range(43f, 45f);
 
-                // Rotate the child arm with the same delta rotation
-                childArm.transform.rotation = parentArm.transform.rotation * initialRelativeRotation * deltaRotation;
+                // Calculate the target rotation for the child arm relative to the parent arm's rotation
+                Quaternion targetRotation = parentArm.transform.rotation * initialRelativeRotation * deltaRotation;
+
+                // Rotate the parent arm
+                parentArm.transform.rotation = angular_acumulator.targetRotations[index];
+
+                // Apply the relative rotation to the child arm
+                childArm.transform.rotation = targetRotation * Quaternion.Inverse(parentArm.transform.rotation);
             }
             else
             {
