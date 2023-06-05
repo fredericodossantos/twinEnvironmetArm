@@ -2,56 +2,67 @@ using UnityEngine;
 
 public class ScaraRotate : MonoBehaviour
 {
-    public Angular_Acumulator angular_acumulator;
-    public GameObject parentArm; // Reference to the parent arm game object
-    public GameObject childArm; // Reference to the child arm game object
-    private Quaternion initialRelativeRotation; // Initial relative rotation between parent and child arms
-
-    private void Start()
-    {
-        // Calculate the initial relative rotation
-        initialRelativeRotation = Quaternion.Inverse(parentArm.transform.rotation) * childArm.transform.rotation;
-    }
+    public float rotateSpeed = 45f; // Speed at which the game object rotates
 
     public void RotateIt()
     {
         Debug.Log("Clicked to rotate");
 
-        // Find the index of the parent arm game object in the gameObjects list
-        int index = -1;
-        for (int i = 0; i < angular_acumulator.gameObjects.Length; i++)
+        // Check if the game object is not rotating
+        if (!IsRotating())
         {
-            if (angular_acumulator.gameObjects[i] == parentArm)
-            {
-                index = i;
-                break;
-            }
+            // Change the target rotation of the game object
+            Quaternion deltaRotation = Quaternion.Euler(0f, 0f, Random.Range(-90f, 90f));
+            Quaternion targetRotation = transform.rotation * deltaRotation;
+
+            // Rotate the game object towards the target rotation
+            StartCoroutine(RotateTowards(targetRotation));
+        }
+        else
+        {
+            Debug.Log("Object still rotating");
+        }
+    }
+
+    private bool IsRotating()
+    {
+        // Check if the game object is rotating by comparing its current rotation with the target rotation
+        return Quaternion.Angle(transform.rotation, GetTargetRotation()) > 0.01f;
+    }
+
+    private Quaternion GetTargetRotation()
+    {
+        // Calculate the target rotation based on the current rotation and the rotation speed
+        float angle = (Time.time * rotateSpeed) % 360f;
+        return Quaternion.Euler(0f, 0f, angle);
+    }
+
+    private System.Collections.IEnumerator RotateTowards(Quaternion targetRotation)
+    {
+        // Rotate the game object towards the target rotation gradually over time
+        float duration = 1f; // Duration of rotation in seconds
+        float elapsedTime = 0f;
+
+        Quaternion startRotation = transform.rotation;
+
+        while (elapsedTime < duration)
+        {
+            // Calculate the interpolation factor based on elapsed time
+            float t = elapsedTime / duration;
+
+            // Interpolate between the start rotation and the target rotation
+            Quaternion newRotation = Quaternion.Slerp(startRotation, targetRotation, t);
+
+            // Apply the new rotation to the game object
+            transform.rotation = newRotation;
+
+            // Increment the elapsed time
+            elapsedTime += Time.deltaTime;
+
+            yield return null;
         }
 
-        // Check if the parent arm game object was found
-        if (index != -1)
-        {
-            // Check if the parent arm game object is not rotating
-            if (!angular_acumulator.isRotating[index])
-            {
-                // Change the target rotation and speed of the parent arm
-                Quaternion deltaRotation = Quaternion.Euler(0f, 0f, Random.Range(-90f, 90f));
-                angular_acumulator.targetRotations[index] *= deltaRotation;
-                angular_acumulator.rotateSpeed = Random.Range(43f, 45f);
-
-                // Calculate the target rotation for the child arm relative to the parent arm's rotation
-                Quaternion targetRotation = parentArm.transform.rotation * initialRelativeRotation * deltaRotation;
-
-                // Rotate the parent arm
-                parentArm.transform.rotation = angular_acumulator.targetRotations[index];
-
-                // Apply the relative rotation to the child arm
-                childArm.transform.rotation = targetRotation * Quaternion.Inverse(parentArm.transform.rotation);
-            }
-            else
-            {
-                Debug.Log("Object still rotating");
-            }
-        }
+        // Ensure the final rotation is set to the target rotation
+        transform.rotation = targetRotation;
     }
 }
