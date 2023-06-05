@@ -5,32 +5,44 @@ using UnityEngine;
 public class ScaraRotate : MonoBehaviour
 {
     public Angular_Acumulator angular_acumulator;
+    public GameObject parentArm; // Reference to the parent arm game object
+    public GameObject childArm; // Reference to the child arm game object
+    private Quaternion initialRelativeRotation; // Initial relative rotation between parent and child arms
+
+    private void Start()
+    {
+        // Calculate the initial relative rotation
+        initialRelativeRotation = Quaternion.Inverse(parentArm.transform.rotation) * childArm.transform.rotation;
+    }
 
     public void RotateIt()
     {
         Debug.Log("Clicked to rotate");
 
-        // Find the index of this game object in the gameObjects list
+        // Find the index of the parent arm game object in the gameObjects list
         int index = -1;
         for (int i = 0; i < angular_acumulator.gameObjects.Length; i++)
         {
-            if (angular_acumulator.gameObjects[i] == gameObject)
+            if (angular_acumulator.gameObjects[i] == parentArm)
             {
                 index = i;
                 break;
             }
         }
 
-        // Check if the game object was found
+        // Check if the parent arm game object was found
         if (index != -1)
         {
-            // Check if the game object is not rotating
+            // Check if the parent arm game object is not rotating
             if (!angular_acumulator.isRotating[index])
             {
-                // Change the target rotation and speed of the game object
-                Quaternion deltaRotation = Quaternion.Euler( 0f, 0f, Random.Range(-90f, 90f));
+                // Change the target rotation and speed of the parent arm
+                Quaternion deltaRotation = Quaternion.Euler(0f, 0f, Random.Range(-90f, 90f));
                 angular_acumulator.targetRotations[index] *= deltaRotation;
                 angular_acumulator.rotateSpeed = Random.Range(43f, 45f);
+
+                // Rotate the child arm with the same delta rotation
+                childArm.transform.rotation = parentArm.transform.rotation * initialRelativeRotation * deltaRotation;
             }
             else
             {
