@@ -5,13 +5,15 @@ public class RotateBraco : MonoBehaviour
 {
     public Button rotateButton;
     public GameObject targetObject;
-    public InputField rotationInput;
+    public string rotationInputBraco;
 
     private bool isRotating = false;
+    private InputField rotationInput;
 
     private void Start()
     {
         rotateButton.onClick.AddListener(RotateObject);
+        
     }
 
     private void RotateObject()
