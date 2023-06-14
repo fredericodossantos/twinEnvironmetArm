@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class RotateBraco : MonoBehaviour
+public class RotateHand : MonoBehaviour
 {
     public Button rotateButton;
     public GameObject targetObject;
