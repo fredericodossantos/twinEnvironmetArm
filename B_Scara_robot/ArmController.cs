@@ -5,7 +5,7 @@ using UnityEngine;
 public class ArmController : MonoBehaviour
 {
     public GameObject Forearm;
-    public GameObject Hand;
+    public GameObject Target;
 
     void Update()
     {
@@ -14,11 +14,11 @@ public class ArmController : MonoBehaviour
 
     void DragSegment(Transform joint)
     {
-        Vector3 target = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.z, 10f));
+        Vector3 target = Target.transform.position;
         float dx = target.x - joint.position.x;
         float dz = target.z - joint.position.z;
         float angle = 180 - Mathf.Atan2(dz, dx);
 
-        joint.rotation = Quaternion.Euler(90f, angle * Mathf.Rad2Deg, 0f );
+        joint.rotation = Quaternion.Euler(90f, angle * Mathf.Rad2Deg, 0f);
     }
 }
