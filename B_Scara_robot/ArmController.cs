@@ -6,9 +6,20 @@ public class ArmController : MonoBehaviour
 {
     public GameObject Arm;
     public GameObject Forearm;
+    public GameObject Hand;
     public GameObject Target;
-    public float armLength;
-    public float forearmLength;
+    private float armLength;
+    private float forearmLength;
+
+    void Start()
+    {
+        armLength = Vector3.Distance(Arm.transform.position, Forearm.transform.position);
+        // show the armLength value in the console
+        Debug.Log("Arm length: " + armLength);
+        forearmLength = Vector3.Distance(Forearm.transform.position, Hand.transform.position);
+        // show value in the console
+        Debug.Log("Forearm length: " + forearmLength);
+    }
 
     void Update()
     {
@@ -21,16 +32,20 @@ public class ArmController : MonoBehaviour
         float dx = target.x - joint1.position.x;
         float dz = target.z - joint1.position.z;
         float distance = Mathf.Sqrt(dx * dx + dz * dz);
-        float a1 = Mathf.Acos((armLength * armLength + distance * distance - forearmLength * forearmLength) / (2 * armLength * distance));
+        float a1 = 0f;
+        float cosValue = (armLength * armLength + distance * distance - forearmLength * forearmLength) / (2 * armLength * distance);
+        if (cosValue >= -1f && cosValue <= 1f)
+            a1 = Mathf.Acos(cosValue);
         float a2 = Mathf.Atan2(dz, dx);
         float angle1 = a2 - a1;
 
-        joint1.rotation = Quaternion.Euler(90f, 180 + angle1 * Mathf.Rad2Deg, 0f);
+        joint1.rotation = Quaternion.Euler(270f,  -1 * angle1 * Mathf.Rad2Deg -180f, 0f);
 
         dx = target.x - joint2.position.x;
         dz = target.z - joint2.position.z;
         float angle2 = Mathf.Atan2(dz, dx);
 
-        joint2.rotation = Quaternion.Euler(90f, 180 + angle2 * Mathf.Rad2Deg, 0f);
+        joint2.rotation = Quaternion.Euler(90f, -1 * angle2 * Mathf.Rad2Deg + 180, 0f);
     }
+
 }
