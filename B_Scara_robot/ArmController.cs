@@ -44,7 +44,7 @@ void Start()
         float a2 = Mathf.Atan2(dz, dx);
         float angle1 = a2 - a1;
 
-        joint1.rotation = Quaternion.Euler(270f,  -1 * angle1 * Mathf.Rad2Deg -180f, 0f);
+        joint1.rotation = Quaternion.Euler(270f,  -1 * angle1 * Mathf.Rad2Deg + 180f, 0f);
 
         dx = target.x - joint2.position.x;
         dz = target.z - joint2.position.z;
