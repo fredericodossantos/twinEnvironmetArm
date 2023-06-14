@@ -14,11 +14,11 @@ public class ArmController : MonoBehaviour
 
     void DragSegment(Transform joint)
     {
-        Vector3 target = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10f));
+        Vector3 target = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.z, 10f));
         float dx = target.x - joint.position.x;
-        float dy = target.y - joint.position.y;
-        float angle = Mathf.Atan2(dy, dx);
+        float dz = target.z - joint.position.z;
+        float angle = 180 - Mathf.Atan2(dz, dx);
 
-        joint.rotation = Quaternion.Euler(0f, 0f, angle * Mathf.Rad2Deg);
+        joint.rotation = Quaternion.Euler(90f, angle * Mathf.Rad2Deg, 0f );
     }
 }
