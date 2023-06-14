@@ -11,15 +11,20 @@ public class ArmController : MonoBehaviour
     private float armLength;
     private float forearmLength;
 
-    void Start()
+void Start()
     {
-        armLength = Vector3.Distance(Arm.transform.position, Forearm.transform.position);
+        Vector3 armPos = new Vector3(Arm.transform.position.x, 0f, Arm.transform.position.z);
+        Vector3 forearmPos = new Vector3(Forearm.transform.position.x, 0f, Forearm.transform.position.z);
+        armLength = Vector3.Distance(armPos, forearmPos);
         // show the armLength value in the console
         Debug.Log("Arm length: " + armLength);
-        forearmLength = Vector3.Distance(Forearm.transform.position, Hand.transform.position);
+
+        Vector3 handPos = new Vector3(Hand.transform.position.x, 0f, Hand.transform.position.z);
+        forearmLength = Vector3.Distance(forearmPos, handPos);
         // show value in the console
         Debug.Log("Forearm length: " + forearmLength);
     }
+
 
     void Update()
     {
