@@ -14,7 +14,7 @@ public class PathCreator : MonoBehaviour
     
     private LineRenderer lineRenderer;
     private List<Vector3> points = new List<Vector3>();
-    public Action<IEnumerable<Vector3>> OnPathCreated = delegate { };
+    public Action<IEnumerable<Vector3>> OnNewPathCreated = delegate { };
 
     void Awake()
     {
