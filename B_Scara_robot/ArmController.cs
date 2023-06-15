@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
 public class ArmController : MonoBehaviour
 {
     public GameObject Arm;
@@ -10,7 +9,6 @@ public class ArmController : MonoBehaviour
     public GameObject Target;
     private float armLength;
     private float forearmLength;
-
 void Start()
     {
         Vector3 armPos = new Vector3(Arm.transform.position.x, 0f, Arm.transform.position.z);
@@ -24,13 +22,10 @@ void Start()
         // show value in the console
         Debug.Log("Forearm length: " + forearmLength);
     }
-
-
     void Update()
     {
         InverseKinematics(Arm.transform, Forearm.transform);
     }
-
     void InverseKinematics(Transform joint1, Transform joint2)
     {
         Vector3 target = Target.transform.position;
@@ -52,5 +47,4 @@ void Start()
 
         joint2.rotation = Quaternion.Euler(90f, -1 * angle2 * Mathf.Rad2Deg + 180, 0f);
     }
-
 }
