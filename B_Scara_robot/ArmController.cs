@@ -23,6 +23,12 @@ void Start()
         forearmLength = Vector3.Distance(forearmPos, handPos);
         // show value in the console
         Debug.Log("Forearm length: " + forearmLength);
+
+        // set the (x,z) positon of the guide to the same (x,z) position as the hand
+        Vector3 guidePos = new Vector3(Guide.transform.position.x, 0f, Guide.transform.position.z);
+        guidePos.x = handPos.x;
+        guidePos.z = handPos.z;
+        Guide.transform.position = guidePos;
     }
     void Update()
     {
@@ -57,7 +63,7 @@ void Start()
         joint3.position = handPos;
 
         // get the glogal rotation of the guide and set only the rotaton in the y axis to the joint3(hand)
-        Vector3 guideRotation = Target.transform.rotation.eulerAngles;
+        Vector3 guideRotation = Guide.transform.rotation.eulerAngles;
         joint3.rotation = Quaternion.Euler(90f, guideRotation.y, 0f);
 
     }
