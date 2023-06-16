@@ -6,7 +6,7 @@ public class ArmController : MonoBehaviour
     public GameObject Arm;
     public GameObject Forearm;
     public GameObject Hand;
-    public GameObject Target;
+    public GameObject Guide;
 
     public float handOffSet = -1.7f;
     private float armLength;
@@ -30,9 +30,9 @@ void Start()
     }
     void InverseKinematics(Transform joint1, Transform joint2, Transform joint3)
     {
-        Vector3 target = Target.transform.position;
-        float dx = target.x - joint1.position.x;
-        float dz = target.z - joint1.position.z;
+        Vector3 guide = Guide.transform.position;
+        float dx = guide.x - joint1.position.x;
+        float dz = guide.z - joint1.position.z;
         
         
         float distance = Mathf.Sqrt(dx * dx + dz * dz);
@@ -45,20 +45,20 @@ void Start()
 
         joint1.rotation = Quaternion.Euler(270f,  -1 * angle1 * Mathf.Rad2Deg + 180f, 0f);
 
-        dx = target.x - joint2.position.x;
-        dz = target.z - joint2.position.z;
+        dx = guide.x - joint2.position.x;
+        dz = guide.z - joint2.position.z;
         float angle2 = Mathf.Atan2(dz, dx);
 
         joint2.rotation = Quaternion.Euler(90f, -1 * angle2 * Mathf.Rad2Deg + 180, 0f);
 
-        // move joint3(hand) to the same y position as the target
+        // move joint3(hand) to the same y position as the guide
         Vector3 handPos = joint3.position;
-        handPos.y = target.y - handOffSet;
+        handPos.y = guide.y - handOffSet;
         joint3.position = handPos;
 
-        // get the glogal rotation of the target and set only the rotaton in the y axis to the joint3(hand)
-        Vector3 targetRotation = Target.transform.rotation.eulerAngles;
-        joint3.rotation = Quaternion.Euler(90f, targetRotation.y, 0f);
+        // get the glogal rotation of the guide and set only the rotaton in the y axis to the joint3(hand)
+        Vector3 guideRotation = Target.transform.rotation.eulerAngles;
+        joint3.rotation = Quaternion.Euler(90f, guideRotation.y, 0f);
 
     }
 
