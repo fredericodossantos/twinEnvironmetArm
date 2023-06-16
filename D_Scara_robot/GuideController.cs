@@ -7,6 +7,7 @@ public class GuideController : MonoBehaviour
     public LineRenderer path;
     public PathToTarget pathToTarget;
     public UnityEngine.AI.NavMeshAgent agent;
+    public Conveyor conveyor;
 
     void Update()
     {
@@ -16,6 +17,7 @@ public class GuideController : MonoBehaviour
             path.SetPosition(1, pathToTarget.target.transform.position);
 
             agent.SetDestination(pathToTarget.target.transform.position);
+            conveyor.isActive = false; // Deactivate the conveyor
         }
     }
 }
