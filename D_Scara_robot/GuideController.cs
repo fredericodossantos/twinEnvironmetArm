@@ -6,6 +6,7 @@ public class GuideController : MonoBehaviour
 {
     public LineRenderer path;
     public PathToTarget pathToTarget;
+    public UnityEngine.AI.NavMeshAgent agent;
 
     void Update()
     {
@@ -13,6 +14,8 @@ public class GuideController : MonoBehaviour
         {
             path.SetPosition(0, transform.position);
             path.SetPosition(1, pathToTarget.target.transform.position);
+
+            agent.SetDestination(pathToTarget.target.transform.position);
         }
     }
 }
