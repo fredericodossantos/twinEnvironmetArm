@@ -7,6 +7,8 @@ public class ArmController : MonoBehaviour
     public GameObject Forearm;
     public GameObject Hand;
     public GameObject Target;
+
+    public float handOffSet = -1.7f;
     private float armLength;
     private float forearmLength;
 void Start()
@@ -24,13 +26,15 @@ void Start()
     }
     void Update()
     {
-        InverseKinematics(Arm.transform, Forearm.transform);
+        InverseKinematics(Arm.transform, Forearm.transform, Hand.transform);
     }
-    void InverseKinematics(Transform joint1, Transform joint2)
+    void InverseKinematics(Transform joint1, Transform joint2, Transform joint3)
     {
         Vector3 target = Target.transform.position;
         float dx = target.x - joint1.position.x;
         float dz = target.z - joint1.position.z;
+        
+        
         float distance = Mathf.Sqrt(dx * dx + dz * dz);
         float a1 = 0f;
         float cosValue = (armLength * armLength + distance * distance - forearmLength * forearmLength) / (2 * armLength * distance);
@@ -46,5 +50,20 @@ void Start()
         float angle2 = Mathf.Atan2(dz, dx);
 
         joint2.rotation = Quaternion.Euler(90f, -1 * angle2 * Mathf.Rad2Deg + 180, 0f);
+
+        // move joint3(hand) to the same y position as the target
+        Vector3 handPos = joint3.position;
+        handPos.y = target.y - handOffSet;
+        joint3.position = handPos;
+
+        // rotate joint3(hand) to the same x and z rotation as the target 
+        RotateHand(joint3);       
     }
+    void RotateHand(Transform joint)
+    {
+        Quaternion targetRotation = Target.transform.rotation;
+        Vector3 targetEulerAngles = targetRotation.eulerAngles;
+        joint.localRotation = Quaternion.Euler(targetEulerAngles.x, targetEulerAngles.z,targetEulerAngles.y);
+    }
+
 }
