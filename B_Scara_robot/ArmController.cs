@@ -56,14 +56,23 @@ void Start()
         handPos.y = target.y - handOffSet;
         joint3.position = handPos;
 
-        // rotate joint3(hand) to the same x and z rotation as the target 
-        RotateHand(joint3);       
+        // get the glogal rotation of the target and set only the rotaton in the y axis to the joint3(hand)
+        Vector3 targetRotation = Target.transform.rotation.eulerAngles;
+        joint3.rotation = Quaternion.Euler(90f, targetRotation.y, 0f);
+
+        // Vector3 targetRotation = Target.transform.rotation.eulerAngles;
+        // joint3.rotation = Quaternion.Euler(targetRotation.x, targetRotation.y, targetRotation.z);
+        
+        //get the local rotation of the joint3(hand)
+         Vector3 localRotation = joint3.localRotation.eulerAngles;                  
+         Vector3 globalRotation = joint3.rotation.eulerAngles;
+
+        // at each 2 seconds show in the console localRotation value
+        if (Time.time % 2 < 0.02f)
+            Debug.Log("localRotation: " + localRotation);
+            Debug.Log("globalRotation: " + globalRotation);
+
     }
-    void RotateHand(Transform joint)
-    {
-        Quaternion targetRotation = Target.transform.rotation;
-        Vector3 targetEulerAngles = targetRotation.eulerAngles;
-        joint.localRotation = Quaternion.Euler(targetEulerAngles.x, targetEulerAngles.z,targetEulerAngles.y);
-    }
+
 
 }
