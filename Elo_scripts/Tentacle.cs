@@ -15,14 +15,14 @@ public class Tentacle : MonoBehaviour
         segmentLengths = new float[segments.Length];
         angles = new float[segments.Length];
 
-        // Calculate segment lengths
+    // Calculate segment lengths
     for (int i = 0; i < segments.Length; i++)
     {
         Vector3 segmentPosition = segments[i].position;
         Vector3 nextPosition = (i == segments.Length - 1) ? target.position : segments[i + 1].position;
         segmentPosition.y = 0f;
         nextPosition.y = 0f;
-        segmentLengths[i] = Vector3.Distance(segmentPosition, nextPosition);
+        segmentLengths[i] = i == segments.Length - 1 ? 1f : Vector3.Distance(segmentPosition, nextPosition); // modify this line
         Debug.Log("Segment " + i + " length: " + segmentLengths[i]);
     }
 
@@ -48,7 +48,7 @@ public class Tentacle : MonoBehaviour
 
         for (int k = 0; k < segments.Length; k++)
         {
-            Segment(segments[k], angles[k], 10f);
+            Segment(segments[k], angles[k]);
         }
     }
 
@@ -57,7 +57,8 @@ public class Tentacle : MonoBehaviour
         Vector3 dir = segments[b].position - segments[a].position;
         dir.y = 0f; // Ignore the Y-axis
         angles[a] = Mathf.Atan2(dir.z, dir.x) * Mathf.Rad2Deg;
-        segments[a].position = segments[b].position - dir.normalized * segmentLengths[a];
+
+        segments[a].position =dir.normalized * segmentLengths[a] -  segments[b].position ;
     }
 
     private void ReachSegment(int i, float targetX, float targetZ)
@@ -65,12 +66,12 @@ public class Tentacle : MonoBehaviour
         Vector3 dir = new Vector3(targetX - segments[i].position.x, 0f, targetZ - segments[i].position.z);
         angles[i] = Mathf.Atan2(dir.z, dir.x) * Mathf.Rad2Deg;
         Vector3 targetPos = new Vector3(targetX - Mathf.Cos(angles[i] * Mathf.Deg2Rad) * segmentLengths[i],
-                                         segments[i].position.y,
-                                         targetZ - Mathf.Sin(angles[i] * Mathf.Deg2Rad) * segmentLengths[i]);
+                                        segments[i].position.y,
+                                        targetZ - Mathf.Sin(angles[i] * Mathf.Deg2Rad) * segmentLengths[i]);
         segments[i].position = targetPos;
     }
 
-    private void Segment(Transform segment, float angle, float strokeWeight)
+    private void Segment(Transform segment, float angle)
     {
         segment.rotation = Quaternion.Euler(0f, angle, 0f);
     }
