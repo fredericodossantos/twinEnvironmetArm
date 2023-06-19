@@ -35,10 +35,9 @@ public class Tentacle : MonoBehaviour
 
     private void Update()
     {
-        ReachSegment(0, target.position.x, target.position.z);
-        for (int i = 1; i < segments.Length; i++)
+        for (int i = 0; i < segments.Length; i++)
         {
-            ReachSegment(i, segments[i - 1].position.x, segments[i - 1].position.z);
+            ReachSegment(i, target.position.x, target.position.z);
         }
 
         for (int j = segments.Length - 1; j >= 1; j--)
@@ -56,19 +55,15 @@ public class Tentacle : MonoBehaviour
     {
         Vector3 dir = segments[b].position - segments[a].position;
         dir.y = 0f; // Ignore the Y-axis
-        angles[a] = Mathf.Atan2(dir.z, dir.x) * Mathf.Rad2Deg;
+        angles[a] = -(Mathf.Atan2(dir.z, dir.x) * Mathf.Rad2Deg);
 
-        segments[a].position =dir.normalized * segmentLengths[a] -  segments[b].position ;
+        segments[a].position = segments[b].position + dir.normalized * segmentLengths[a];
     }
 
     private void ReachSegment(int i, float targetX, float targetZ)
     {
-        Vector3 dir = new Vector3(targetX - segments[i].position.x, 0f, targetZ - segments[i].position.z);
-        angles[i] = Mathf.Atan2(dir.z, dir.x) * Mathf.Rad2Deg;
-        Vector3 targetPos = new Vector3(targetX - Mathf.Cos(angles[i] * Mathf.Deg2Rad) * segmentLengths[i],
-                                        segments[i].position.y,
-                                        targetZ - Mathf.Sin(angles[i] * Mathf.Deg2Rad) * segmentLengths[i]);
-        segments[i].position = targetPos;
+        Vector3 dir = new Vector3(targetX - segments[i].position.x, 0f, -(targetZ - segments[i].position.z));
+        angles[i] = Mathf.Atan2(dir.z, dir.x) * Mathf.Rad2Deg; // Add 180 degrees to invert rotation
     }
 
     private void Segment(Transform segment, float angle)
@@ -76,9 +71,6 @@ public class Tentacle : MonoBehaviour
         segment.rotation = Quaternion.Euler(0f, angle, 0f);
     }
 
-    private float RoundToDecimal(float value, int decimalPlaces)
-    {
-        float multiplier = Mathf.Pow(10f, decimalPlaces);
-        return Mathf.Round(value * multiplier) / multiplier;
-    }
+
+
 }
