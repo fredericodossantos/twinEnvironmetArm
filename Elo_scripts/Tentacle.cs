@@ -62,16 +62,15 @@ public class Tentacle : MonoBehaviour
 
     private void ReachSegment(int i, float targetX, float targetZ)
     {
-        Vector3 currentPosition = segments[i].position;
-        Vector3 targetPosition = new Vector3(targetX, currentPosition.y, targetZ);
-        Vector3 dir = targetPosition - currentPosition;
-        dir.y = 0f; // Ignore the Y-axis
-        angles[i] = Mathf.Atan2(dir.z, dir.x) * Mathf.Rad2Deg;
+        Vector3 dir = new Vector3(targetX - segments[i].position.x, 0f, -(targetZ - segments[i].position.z));
+        angles[i] = Mathf.Atan2(dir.z, dir.x) * Mathf.Rad2Deg; // Add 180 degrees to invert rotation
     }
 
     private void Segment(Transform segment, float angle)
     {
         segment.rotation = Quaternion.Euler(0f, angle, 0f);
     }
+
+
 
 }
