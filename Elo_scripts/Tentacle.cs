@@ -35,18 +35,19 @@ public class Tentacle : MonoBehaviour
 
     private void Update()
     {
-        ReachSegment(0, target.position.x, target.position.z);
-        for (int i = 1; i < segments.Length; i++)
+        ReachSegment(1, target.position.x, target.position.z); // Start from index 1 instead of 0
+
+        for (int i = 2; i < segments.Length; i++) // Start from index 2
         {
             ReachSegment(i, segments[i - 1].position.x, segments[i - 1].position.z);
         }
 
-        for (int j = segments.Length - 1; j >= 1; j--)
+        for (int j = segments.Length - 1; j >= 2; j--) // Start from index 2
         {
             PositionSegment(j, j - 1);
         }
 
-        for (int k = 0; k < segments.Length; k++)
+        for (int k = 1; k < segments.Length; k++) // Start from index 1 instead of 0
         {
             Segment(segments[k], angles[k], 10f);
         }
