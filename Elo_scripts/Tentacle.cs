@@ -16,15 +16,15 @@ public class Tentacle : MonoBehaviour
         angles = new float[segments.Length];
 
         // Calculate segment lengths
-        for (int i = 0; i < segments.Length; i++)
-        {
-            Vector3 segmentPosition = segments[i].position;
-            Vector3 nextPosition = (i == segments.Length - 1) ? target.position : segments[i + 1].position;
-            segmentPosition.y = 0f;
-            nextPosition.y = 0f;
-            segmentLengths[i] = RoundToDecimal(Vector3.Distance(segmentPosition, nextPosition), 2);
-            Debug.Log("Segment " + i + " length: " + segmentLengths[i]);
-        }
+    for (int i = 0; i < segments.Length; i++)
+    {
+        Vector3 segmentPosition = segments[i].position;
+        Vector3 nextPosition = (i == segments.Length - 1) ? target.position : segments[i + 1].position;
+        segmentPosition.y = 0f;
+        nextPosition.y = 0f;
+        segmentLengths[i] = Vector3.Distance(segmentPosition, nextPosition);
+        Debug.Log("Segment " + i + " length: " + segmentLengths[i]);
+    }
 
         // Set initial angles for each segment to 0
         for (int i = 0; i < segments.Length; i++)
