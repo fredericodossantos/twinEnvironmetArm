@@ -22,7 +22,7 @@ public class Tentacle : MonoBehaviour
             Vector3 nextPosition = (i == segments.Length - 1) ? target.position : segments[i + 1].position;
             segmentPosition.y = 0f;
             nextPosition.y = 0f;
-            segmentLengths[i] = RoundToDecimal(Vector3.Distance(segmentPosition, nextPosition), 2);
+            segmentLengths[i] = 1;//RoundToDecimal(Vector3.Distance(segmentPosition, nextPosition), 2);
             Debug.Log("Segment " + i + " length: " + segmentLengths[i]);
         }
 
